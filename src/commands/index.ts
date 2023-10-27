@@ -12,6 +12,7 @@ import deepl from './deepl'
 import gotoRange from './gotoRange'
 import gotoNextUsage from './gotoNextUsage'
 import batchHardStringsExtract from './extractStringBulk'
+import exportExcel from './export'
 import { ExtensionModule } from '~/modules'
 
 const m: ExtensionModule = (ctx) => {
@@ -29,6 +30,7 @@ const m: ExtensionModule = (ctx) => {
     deepl(ctx),
     gotoRange(ctx),
     gotoNextUsage(ctx),
+    exportExcel(ctx),
   ])
 }
 

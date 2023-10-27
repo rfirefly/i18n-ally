@@ -11,6 +11,7 @@ import { AllyError, ErrorType } from '../Errors'
 import { Analyst, Global, Config } from '..'
 import { Telemetry, TelemetryKey } from '../Telemetry'
 import { Loader } from './Loader'
+import { RemoteLoader } from './remoteLoader'
 import { ReplaceLocale, Log, applyPendingToObject, unflatten, NodeHelper, getCache, setCache, getLocaleCompare } from '~/utils'
 import i18n from '~/i18n'
 
@@ -21,13 +22,16 @@ export class LocaleLoader extends Loader {
   private _path_matchers: {regex: RegExp; matcher: string}[] = []
   private _dir_structure: DirStructure = 'file'
   private _locale_dirs: string[] = []
+  private _remote_loader: RemoteLoader | null = null
 
   constructor(public readonly rootpath: string) {
     super(`[LOCALE]${rootpath}`)
+    this._remote_loader = new RemoteLoader(rootpath)
   }
 
   async init() {
     if (await this.findLocaleDirs()) {
+      await this._remote_loader?.init(this._locale_dirs[0])
       Log.info(`🚀 Initializing loader "${this.rootpath}"`)
       this._dir_structure = await this.guessDirStructure()
       Log.info(`📂 Directory structure: ${this._dir_structure}`)

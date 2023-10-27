@@ -16,7 +16,7 @@ interface DecodeData {
 
 const defaultEncoding = 'utf-8'
 const encodingMapping: Record<string, string> = {
-  ascii: defaultEncoding,
+  'ascii': defaultEncoding,
   'windows-1252': defaultEncoding,
 }
 
@@ -98,4 +98,16 @@ export class File {
   static encode(string: string, encoding: string, addBOM = true): Buffer {
     return iconv.encode(string, encoding, { addBOM })
   }
+}
+
+export async function getDirectories(path: string): Promise<string[]> {
+  const files = await fs.readdir(path)
+  const directories = await Promise.all(
+    files.map(async(file) => {
+      const filePath = `${path}/${file}`
+      const stats = await fs.stat(filePath)
+      return stats.isDirectory() ? file : null
+    }),
+  )
+  return directories.filter(d => d !== null) as string[]
 }

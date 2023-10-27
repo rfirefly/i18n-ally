@@ -1,9 +1,9 @@
 {
-  "publisher": "lokalise",
-  "name": "i18n-ally",
-  "version": "2.12.0",
-  "displayName": "i18n Ally",
-  "description": "🌍 All in one i18n extension for VS Code",
+  "publisher": "rfirefly",
+  "name": "i18n-ally-export",
+  "version": "3.0.1",
+  "displayName": "i18n Ally(firefly)",
+  "description": "🌍 All in one i18n extension for VS Code (auto load remote locale by API)",
   "keywords": [
     "vue",
     "vue-i18n",
@@ -62,6 +62,7 @@
     "lodash": "^4.17.21",
     "micromatch": "^4.0.4",
     "nanoid": "^3.1.25",
+    "node-xlsx": "^0.23.0",
     "parse-gitignore": "^1.0.1",
     "pofile": "^1.1.1",
     "properties": "^1.2.1",
@@ -127,7 +128,7 @@
     "tsconfig-paths-webpack-plugin": "^3.5.1",
     "unplugin": "^0.0.5",
     "uuid": "^8.3.2",
-    "vsce": "^1.96.1",
+    "vsce": "^2.15.0",
     "vue": "^2.6.14",
     "vue-i18n": "^8.22.4",
     "vue-material-design-icons": "^4.12.1",
@@ -172,6 +173,11 @@
   "bugs": "https://github.com/lokalise/i18n-ally/issues",
   "contributes": {
     "commands": [
+      {
+        "command": "i18n-ally.output-missing",
+        "title": "导出缺失的key",
+        "category": "%extname%"
+      },
       {
         "command": "i18n-ally.config-locales",
         "title": "%command.config_locales%",
@@ -1332,6 +1338,16 @@
         },
         "vue-i18n-ally.readonly": {
           "deprecationMessage": "%config.deprecated%"
+        },
+        "i18n-ally.localesApis": {
+          "type": [
+            "object"
+          ],
+          "description": "fetching locales data api, eg: {'zh-CN': {common: commonJsonApi, pc: pcJsonApi}}"
+        },
+        "i18n-ally.system": {
+          "type": "string",
+          "description": "export excel system"
         }
       }
     }

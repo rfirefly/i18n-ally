@@ -1,14 +1,15 @@
 import path from 'path'
 import { execSync } from 'child_process'
-import { workspace, extensions, ExtensionContext, commands, ConfigurationScope, WorkspaceFolder } from 'vscode'
+import { workspace, extensions, ExtensionContext, commands, ConfigurationScope, WorkspaceFolder, window } from 'vscode'
 import { trimEnd, uniq } from 'lodash'
 import { TagSystems } from '../tagSystems'
 import { EXT_NAMESPACE, EXT_ID, EXT_LEGACY_NAMESPACE, KEY_REG_DEFAULT, KEY_REG_ALL, DEFAULT_LOCALE_COUNTRY_MAP } from '../meta'
-import { KeyStyle, DirStructureAuto, SortCompare, TargetPickingStrategy } from '.'
+import { KeyStyle, DirStructureAuto, SortCompare, TargetPickingStrategy, LocalesApis } from '.'
 import i18n from '~/i18n'
 import { CaseStyles } from '~/utils/changeCase'
 import { ExtractionBabelOptions, ExtractionHTMLOptions } from '~/extraction/parsers/options'
 import { resolveRefactorTemplate } from '~/utils/resolveRefactorTemplate'
+import { Log } from '~/utils'
 
 export class Config {
   static readonly reloadConfigs = [
@@ -180,7 +181,7 @@ export class Config {
     return this.getConfig<SortCompare>('sortCompare') || 'binary'
   }
 
-  static get sortLocale(): string | undefined{
+  static get sortLocale(): string | undefined {
     return this.getConfig<string>('sortLocale')
   }
 
@@ -586,5 +587,27 @@ export class Config {
 
   static get telemetry(): boolean {
     return workspace.getConfiguration().get('telemetry.enableTelemetry') as boolean
+  }
+
+  // localesApis
+  static get localesApis() {
+    let curWorkspaceFolder
+    const editor = window.activeTextEditor
+    const uri = editor?.document.uri
+
+    Log.info(`🚀 editor?.document.uri: ${editor?.document.uri}`)
+
+    if (uri) curWorkspaceFolder = workspace.getWorkspaceFolder(uri)
+
+    Log.info(`🚀 curWorkspaceFolder: ${curWorkspaceFolder}`)
+    const apis: LocalesApis | undefined = this.getConfig(
+      'localesApis',
+      curWorkspaceFolder,
+    )
+    return apis
+  }
+
+  static get excelSystem() {
+    return this.getConfig<string>('system')
   }
 }
